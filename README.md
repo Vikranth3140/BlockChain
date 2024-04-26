@@ -35,7 +35,7 @@ This is a simple blockchain implementation in Python. It includes functionalitie
 2. Install the requred dependancies:
 
    ```bash
-   pip install requirements.txt
+   pip install -r requirements.txt
    ```
 
 4. Run the BlockChain program:
