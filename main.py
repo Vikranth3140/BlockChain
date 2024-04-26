@@ -63,6 +63,32 @@ def print_blockchain(blockchain):
     print("Current Transactions:")
     print(blockchain.current_transactions)
 
+def add_transaction(blockchain):
+    sender = input("Enter sender: ")
+    recipient = input("Enter recipient: ")
+    amount = float(input("Enter amount: "))
+    blockchain.current_transactions.append({
+        'sender': sender,
+        'recipient': recipient,
+        'amount': amount
+    })
+    print("Transaction added successfully!")
+
+def mine_block(blockchain):
+    last_block = blockchain.get_last_block()
+    last_proof = last_block['proof']
+    proof = blockchain.proof_of_work(last_proof)
+    previous_hash = blockchain.hash(last_block)
+    block = blockchain.create_block(proof, previous_hash)
+    print("Block mined successfully!")
+
+def verify_chain(blockchain):
+    is_valid = blockchain.is_chain_valid(blockchain.chain)
+    if is_valid:
+        print("The blockchain is valid.")
+    else:
+        print("The blockchain is not valid.")
+
 def main():
     blockchain = Blockchain()
 
@@ -77,30 +103,13 @@ def main():
         choice = input("Enter your choice: ")
 
         if choice == '1':
-            sender = input("Enter sender: ")
-            recipient = input("Enter recipient: ")
-            amount = float(input("Enter amount: "))
-            blockchain.current_transactions.append({
-                'sender': sender,
-                'recipient': recipient,
-                'amount': amount
-            })
-            print("Transaction added successfully!")
+            add_transaction(blockchain)
 
         elif choice == '2':
-            last_block = blockchain.get_last_block()
-            last_proof = last_block['proof']
-            proof = blockchain.proof_of_work(last_proof)
-            previous_hash = blockchain.hash(last_block)
-            block = blockchain.create_block(proof, previous_hash)
-            print("Block mined successfully!")
+            mine_block(blockchain)
 
         elif choice == '3':
-            is_valid = blockchain.is_chain_valid(blockchain.chain)
-            if is_valid:
-                print("The blockchain is valid.")
-            else:
-                print("The blockchain is not valid.")
+            verify_chain(blockchain)
 
         elif choice == '4':
             print_blockchain(blockchain)
