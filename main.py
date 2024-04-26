@@ -6,6 +6,7 @@ class Blockchain:
     def __init__(self):
         self.chain = []
         self.current_transactions = []
+        self.users = {}  # User accounts with balances
         self.create_block(proof=1, previous_hash='0')
 
     def create_block(self, proof, previous_hash):
@@ -56,17 +57,29 @@ class Blockchain:
             block_index += 1
         return True
 
-def print_blockchain(blockchain):
-    print("Blockchain:")
-    for block in blockchain.chain:
-        print(block)
-    print("Current Transactions:")
-    print(blockchain.current_transactions)
+    def add_user(self, username, initial_balance):
+        if username not in self.users:
+            self.users[username] = initial_balance
+            print(f"User '{username}' added with balance {initial_balance}.")
+        else:
+            print(f"User '{username}' already exists.")
 
-def add_transaction(blockchain):
-    sender = input("Enter sender: ")
-    recipient = input("Enter recipient: ")
-    amount = float(input("Enter amount: "))
+    def get_sender_balance(self, sender):
+        return self.users.get(sender, 0)  # Default to 0 if user not found
+
+def add_transaction(blockchain, sender, recipient, amount):
+    # Validate transaction
+    if sender == '' or recipient == '' or amount <= 0:
+        print("Invalid transaction details.")
+        return
+
+    # Check sender balance
+    sender_balance = blockchain.get_sender_balance(sender)
+    if sender_balance < amount:
+        print("Insufficient balance.")
+        return
+
+    # Add transaction to current transactions
     blockchain.current_transactions.append({
         'sender': sender,
         'recipient': recipient,
@@ -89,32 +102,49 @@ def verify_chain(blockchain):
     else:
         print("The blockchain is not valid.")
 
+def print_blockchain(blockchain):
+    print("Blockchain:")
+    for block in blockchain.chain:
+        print(block)
+    print("Current Transactions:")
+    print(blockchain.current_transactions)
+
 def main():
     blockchain = Blockchain()
+    blockchain.add_user("Alice", 100)  # Example user with initial balance
 
     while True:
         print("\nMenu:")
-        print("1. Add Transaction")
-        print("2. Mine Block")
-        print("3. Verify Chain")
-        print("4. Explore Blockchain")
-        print("5. Exit")
+        print("1. Add User")
+        print("2. Add Transaction")
+        print("3. Mine Block")
+        print("4. Verify Chain")
+        print("5. Explore Blockchain")
+        print("6. Exit")
 
         choice = input("Enter your choice: ")
 
         if choice == '1':
-            add_transaction(blockchain)
+            username = input("Enter username: ")
+            balance = float(input("Enter initial balance: "))
+            blockchain.add_user(username, balance)
 
         elif choice == '2':
-            mine_block(blockchain)
+            sender = input("Enter sender: ")
+            recipient = input("Enter recipient: ")
+            amount = float(input("Enter amount: "))
+            add_transaction(blockchain, sender, recipient, amount)
 
         elif choice == '3':
-            verify_chain(blockchain)
+            mine_block(blockchain)
 
         elif choice == '4':
-            print_blockchain(blockchain)
+            verify_chain(blockchain)
 
         elif choice == '5':
+            print_blockchain(blockchain)
+
+        elif choice == '6':
             print("Exiting...")
             break
 
