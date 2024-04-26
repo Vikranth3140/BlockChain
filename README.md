@@ -2,6 +2,10 @@
 
 This is a simple blockchain implementation in Python. It includes functionalities such as adding users, adding transactions, mining blocks, verifying the chain's integrity, exploring the blockchain, and exiting the program through a menu-driven command-line interface (CLI).
 
+### [Dev Post](https://dev.to/vikranth3140/exploring-the-exciting-world-of-blockchain-from-workshop-inspiration-to-building-an-implementation-in-python-3iaa)
+
+### [ChatGPT Prompt Chat](https://chat.openai.com/share/b6854d29-6ec2-469f-939b-98d6f85ad983)
+
 ## Functionality
 
 - **Add User**: Add a new user to the blockchain with an initial balance.
