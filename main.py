@@ -74,11 +74,11 @@ class Blockchain:
         proof = blockchain.proof_of_work(last_proof)
         previous_hash = blockchain.hash(last_block)
         block = blockchain.create_block(proof, previous_hash)
-        print(f"Block ", block, " mined successfully!")
         
         # Reward the miner with the mining reward
         blockchain.users[miner] += blockchain.mining_reward
         print(f"Block mined successfully! {miner} received a mining reward of {blockchain.mining_reward} coins.")
+        print(f"Block details are as below:\n", block, "\n")
 
 def add_transaction(blockchain, sender, recipient, amount):
     # Check sender balance
@@ -87,15 +87,15 @@ def add_transaction(blockchain, sender, recipient, amount):
         print("Sendor has insufficient balance to make the transaction.")
         return
 
-    # Add transaction to current transactions
+    blockchain.users[sender] -= amount
+    blockchain.users[recipient] += amount
+
     blockchain.current_transactions.append({
         'sender': sender,
         'recipient': recipient,
         'amount': amount
     })
     print("Transaction added successfully!")
-
-    
 
 def verify_chain(blockchain):
     is_valid = blockchain.is_chain_valid(blockchain.chain)
@@ -153,7 +153,7 @@ def main():
 
         elif choice == '3':
             miner = input("Enter miner's username: ")
-            mine_block(blockchain, miner)
+            Blockchain.mine_block(blockchain, miner)
 
         elif choice == '4':
             verify_chain(blockchain)
