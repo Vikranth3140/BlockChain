@@ -8,6 +8,7 @@ class Blockchain:
         self.current_transactions = []
         self.users = {}
         self.create_block(proof=1, previous_hash='0')
+        self.mining_reward = 10 # Example 10 tokens as mining reward
 
     def create_block(self, proof, previous_hash):
         block = {
@@ -67,6 +68,18 @@ class Blockchain:
     def get_sender_balance(self, sender):
         return self.users.get(sender, 0)  # Default to 0 if user not found
 
+    def mine_block(blockchain, miner):
+        last_block = blockchain.get_last_block()
+        last_proof = last_block['proof']
+        proof = blockchain.proof_of_work(last_proof)
+        previous_hash = blockchain.hash(last_block)
+        block = blockchain.create_block(proof, previous_hash)
+        print(f"Block ", block, " mined successfully!")
+        
+        # Reward the miner with the mining reward
+        blockchain.users[miner] += blockchain.mining_reward
+        print(f"Block mined successfully! {miner} received a mining reward of {blockchain.mining_reward} coins.")
+
 def add_transaction(blockchain, sender, recipient, amount):
     # Check sender balance
     sender_balance = blockchain.get_sender_balance(sender)
@@ -82,13 +95,7 @@ def add_transaction(blockchain, sender, recipient, amount):
     })
     print("Transaction added successfully!")
 
-def mine_block(blockchain):
-    last_block = blockchain.get_last_block()
-    last_proof = last_block['proof']
-    proof = blockchain.proof_of_work(last_proof)
-    previous_hash = blockchain.hash(last_block)
-    block = blockchain.create_block(proof, previous_hash)
-    print(f"Block ", block, " mined successfully!")
+    
 
 def verify_chain(blockchain):
     is_valid = blockchain.is_chain_valid(blockchain.chain)
@@ -145,7 +152,8 @@ def main():
                 add_transaction(blockchain, sender, recipient, amount)
 
         elif choice == '3':
-            mine_block(blockchain)
+            miner = input("Enter miner's username: ")
+            mine_block(blockchain, miner)
 
         elif choice == '4':
             verify_chain(blockchain)
