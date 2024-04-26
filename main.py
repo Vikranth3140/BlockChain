@@ -56,29 +56,61 @@ class Blockchain:
             block_index += 1
         return True
 
-# Instantiate the Blockchain
-blockchain = Blockchain()
+def print_blockchain(blockchain):
+    print("Blockchain:")
+    for block in blockchain.chain:
+        print(block)
+    print("Current Transactions:")
+    print(blockchain.current_transactions)
 
-# Add Transactions
-blockchain.current_transactions.append({
-    'sender': 'Alice',
-    'recipient': 'Bob',
-    'amount': 1
-})
+def main():
+    blockchain = Blockchain()
 
-# Mine a New Block
-last_block = blockchain.get_last_block()
-last_proof = last_block['proof']
-proof = blockchain.proof_of_work(last_proof)
-previous_hash = blockchain.hash(last_block)
-block = blockchain.create_block(proof, previous_hash)
+    while True:
+        print("\nMenu:")
+        print("1. Add Transaction")
+        print("2. Mine Block")
+        print("3. Verify Chain")
+        print("4. Explore Blockchain")
+        print("5. Exit")
 
-# Verify the Chain
-is_valid = blockchain.is_chain_valid(blockchain.chain)
-print(f"Is the blockchain valid? {is_valid}")
+        choice = input("Enter your choice: ")
 
-# Explore the Blockchain
-print("Blockchain:")
-print(blockchain.chain)
-print("Current Transactions:")
-print(blockchain.current_transactions)
+        if choice == '1':
+            sender = input("Enter sender: ")
+            recipient = input("Enter recipient: ")
+            amount = float(input("Enter amount: "))
+            blockchain.current_transactions.append({
+                'sender': sender,
+                'recipient': recipient,
+                'amount': amount
+            })
+            print("Transaction added successfully!")
+
+        elif choice == '2':
+            last_block = blockchain.get_last_block()
+            last_proof = last_block['proof']
+            proof = blockchain.proof_of_work(last_proof)
+            previous_hash = blockchain.hash(last_block)
+            block = blockchain.create_block(proof, previous_hash)
+            print("Block mined successfully!")
+
+        elif choice == '3':
+            is_valid = blockchain.is_chain_valid(blockchain.chain)
+            if is_valid:
+                print("The blockchain is valid.")
+            else:
+                print("The blockchain is not valid.")
+
+        elif choice == '4':
+            print_blockchain(blockchain)
+
+        elif choice == '5':
+            print("Exiting...")
+            break
+
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
