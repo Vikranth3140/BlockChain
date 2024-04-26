@@ -56,6 +56,29 @@ class Blockchain:
             block_index += 1
         return True
 
-# Example usage:
+# Instantiate the Blockchain
 blockchain = Blockchain()
-blockchain.create_block(proof=1, previous_hash='0')
+
+# Add Transactions
+blockchain.current_transactions.append({
+    'sender': 'Alice',
+    'recipient': 'Bob',
+    'amount': 1
+})
+
+# Mine a New Block
+last_block = blockchain.get_last_block()
+last_proof = last_block['proof']
+proof = blockchain.proof_of_work(last_proof)
+previous_hash = blockchain.hash(last_block)
+block = blockchain.create_block(proof, previous_hash)
+
+# Verify the Chain
+is_valid = blockchain.is_chain_valid(blockchain.chain)
+print(f"Is the blockchain valid? {is_valid}")
+
+# Explore the Blockchain
+print("Blockchain:")
+print(blockchain.chain)
+print("Current Transactions:")
+print(blockchain.current_transactions)
