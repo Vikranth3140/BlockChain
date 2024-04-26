@@ -88,7 +88,7 @@ def mine_block(blockchain):
     proof = blockchain.proof_of_work(last_proof)
     previous_hash = blockchain.hash(last_block)
     block = blockchain.create_block(proof, previous_hash)
-    print("Block mined successfully!")
+    print(f"Block ", block, " mined successfully!")
 
 def verify_chain(blockchain):
     is_valid = blockchain.is_chain_valid(blockchain.chain)
