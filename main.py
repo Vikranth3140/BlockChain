@@ -6,7 +6,7 @@ class Blockchain:
     def __init__(self):
         self.chain = []
         self.current_transactions = []
-        self.users = {}  # User accounts with balances
+        self.users = {}
         self.create_block(proof=1, previous_hash='0')
 
     def create_block(self, proof, previous_hash):
@@ -68,15 +68,10 @@ class Blockchain:
         return self.users.get(sender, 0)  # Default to 0 if user not found
 
 def add_transaction(blockchain, sender, recipient, amount):
-    # Validate transaction
-    if sender == '' or recipient == '' or amount <= 0:
-        print("Invalid transaction details.")
-        return
-
     # Check sender balance
     sender_balance = blockchain.get_sender_balance(sender)
     if sender_balance < amount:
-        print("Insufficient balance.")
+        print("Sendor has insufficient balance to make the transaction.")
         return
 
     # Add transaction to current transactions
@@ -111,7 +106,9 @@ def print_blockchain(blockchain):
 
 def main():
     blockchain = Blockchain()
-    blockchain.add_user("Alice", 100)  # Example user with initial balance
+    blockchain.add_user("Vikranth", 1000)
+    blockchain.add_user("Harsh", 500)
+    blockchain.add_user("Armaan", 200)
 
     while True:
         print("\nMenu:")
@@ -133,7 +130,19 @@ def main():
             sender = input("Enter sender: ")
             recipient = input("Enter recipient: ")
             amount = float(input("Enter amount: "))
-            add_transaction(blockchain, sender, recipient, amount)
+
+            # Validating the details
+            if sender not in blockchain.users:
+                print("Sendor is an Invalid User.")
+                continue
+            elif recipient not in blockchain.users:
+                print("Recipient is an Invalid User.")
+                continue
+            elif amount <= 0:
+                print("Amount cannot be negative or zero.")
+                continue
+            else:
+                add_transaction(blockchain, sender, recipient, amount)
 
         elif choice == '3':
             mine_block(blockchain)
